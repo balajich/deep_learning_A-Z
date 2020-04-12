@@ -17,25 +17,31 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import os
 
-script_dir = os.path.dirname(__file__)
-abs_file_path = os.path.join(script_dir, 'Churn_Modelling.csv')
+#script_dir = os.path.dirname(__file__)
+#abs_file_path = os.path.join(script_dir, 'Churn_Modelling.csv')
 
 # Importing the dataset
-dataset = pd.read_csv(abs_file_path)
+dataset = pd.read_csv('/home/mario/PycharmProjects/deep_learning_A-Z/Volume_1-Supervised_Deep_Learning/Part_1-Artificial_Neural_Networks-ANN/Section_4-Building_an_ANN/Churn_Modelling.csv')
 X = dataset.iloc[:, 3:13].values
 y = dataset.iloc[:, 13].values
 
 # Encoding categorical data
 from sklearn.preprocessing import LabelEncoder, OneHotEncoder
-
+from sklearn.compose import ColumnTransformer
 labelencoder_X_1 = LabelEncoder()
 X[:, 1] = labelencoder_X_1.fit_transform(X[:, 1])
-
 labelencoder_X_2 = LabelEncoder()
 X[:, 2] = labelencoder_X_2.fit_transform(X[:, 2])
-
-onehotencoder = OneHotEncoder(categorical_features=[1])
-X = onehotencoder.fit_transform(X).toarray()
+onehotencoder = ColumnTransformer([('one_hot_encoder', OneHotEncoder(),[1])], remainder = 'passthrough')
+X = onehotencoder.fit_transform(X)
+X = X[:, 1:]
+ 
+ 
+ 
+columnTransformer = ColumnTransformer([('encoder', OneHotEncoder(), [1])], remainder='passthrough')
+ 
+X = np.array(columnTransformer.fit_transform(X), dtype = np.str)
+ 
 X = X[:, 1:]
 
 # Splitting the dataset into the Training set and Test set
@@ -53,9 +59,9 @@ X_test = sc.transform(X_test)
 # Part 2 - Now let's make the ANN!
 
 # Importing the Keras libraries and packages
-from tensorflow.contrib.keras.api.keras.models import Sequential
-from tensorflow.contrib.keras.api.keras.layers import Dense
-from tensorflow.contrib.keras import backend
+import keras
+from keras.models import Sequential
+from keras.layers import Dense
 
 # Initialising the ANN
 classifier = Sequential()
