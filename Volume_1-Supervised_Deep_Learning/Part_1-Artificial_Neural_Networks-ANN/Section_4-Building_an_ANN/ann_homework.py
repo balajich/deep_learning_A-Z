@@ -1,3 +1,4 @@
+# answer for the home work
 # Artificial Neural Network
 
 # Installing Theano
@@ -19,8 +20,9 @@ import pandas as pd
 # abs_file_path = os.path.join(script_dir, 'Churn_Modelling.csv')
 
 # Importing the dataset
+# Last row contains elements that needs to be predicted
 dataset = pd.read_csv(
-    '/home/mario/PycharmProjects/deep_learning_A-Z/Volume_1-Supervised_Deep_Learning/Part_1-Artificial_Neural_Networks-ANN/Section_4-Building_an_ANN/Churn_Modelling.csv')
+    '/home/mario/PycharmProjects/deep_learning_A-Z/Volume_1-Supervised_Deep_Learning/Part_1-Artificial_Neural_Networks-ANN/Section_4-Building_an_ANN/hw_Churn_Modelling.csv')
 X = dataset.iloc[:, 3:13].values
 y = dataset.iloc[:, 13].values
 
@@ -35,24 +37,22 @@ X[:, 2] = labelencoder_X_2.fit_transform(X[:, 2])
 onehotencoder = ColumnTransformer([('one_hot_encoder', OneHotEncoder(), [1])], remainder='passthrough')
 X = onehotencoder.fit_transform(X)
 X = X[:, 1:]
-
 columnTransformer = ColumnTransformer([('encoder', OneHotEncoder(), [1])], remainder='passthrough')
-
 X = np.array(columnTransformer.fit_transform(X), dtype=np.str)
-
 X = X[:, 1:]
+
+from sklearn.preprocessing import StandardScaler
+
+sc = StandardScaler()
+X = sc.fit_transform(X)
+X_last = X[-1, :]  # Take the row that needs to be predicted
+X = X[:-1, :]  # Remove predictable row
+y = y[:-1]  # Remove predictable row
 
 # Splitting the dataset into the Training set and Test set
 from sklearn.model_selection import train_test_split
 
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=0)
-
-# Feature Scaling
-from sklearn.preprocessing import StandardScaler
-
-sc = StandardScaler()
-X_train = sc.fit_transform(X_train)
-X_test = sc.transform(X_test)
 
 # Part 2 - Now let's make the ANN!
 
@@ -84,6 +84,10 @@ classifier.fit(X_train, y_train, batch_size=10, epochs=100, validation_split=0.1
 y_pred = classifier.predict(X_test)
 y_pred = (y_pred > 0.5)
 
+# Predicting  new point
+y_new_pred = classifier.predict(np.array([X_last]))
+y_new_pred = (y_new_pred > 0.5)
+print(y_new_pred)
 # Making the Confusion Matrix
 from sklearn.metrics import confusion_matrix
 
