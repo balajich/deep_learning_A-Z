@@ -11,3 +11,6 @@
     pip install Theano
     pip install keras
     pip install pandas
+    pip install pillow
+# Data location
+     /mnt/disks/data/

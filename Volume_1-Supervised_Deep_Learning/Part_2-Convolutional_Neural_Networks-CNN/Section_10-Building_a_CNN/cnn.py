@@ -1,13 +1,10 @@
-from tensorflow.contrib.keras.api.keras.layers import Dropout
-from tensorflow.contrib.keras.api.keras.models import Sequential
-from tensorflow.contrib.keras.api.keras.layers import Conv2D
-from tensorflow.contrib.keras.api.keras.layers import MaxPooling2D
-from tensorflow.contrib.keras.api.keras.layers import Flatten
-from tensorflow.contrib.keras.api.keras.layers import Dense
-from tensorflow.contrib.keras.api.keras.callbacks import Callback
-from tensorflow.contrib.keras.api.keras.preprocessing.image import ImageDataGenerator
-from tensorflow.contrib.keras import backend
+# Importing the Keras libraries and packages
+from keras.callbacks import Callback
+from keras.models import Sequential
+from keras.layers import Dense, Conv2D, MaxPooling2D, Flatten, Dropout
 import os
+
+from keras_preprocessing.image import ImageDataGenerator
 
 
 class LossHistory(Callback):
@@ -100,5 +97,5 @@ myFile = open(loss_history_path, 'w+')
 myFile.write(history.losses)
 myFile.close()
 
-backend.clear_session()
+
 print("The model class indices are:", training_set.class_indices)
