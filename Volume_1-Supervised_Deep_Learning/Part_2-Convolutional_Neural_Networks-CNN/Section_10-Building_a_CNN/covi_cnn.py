@@ -14,7 +14,7 @@ class LossHistory(Callback):
         self.losses = ''
 
     def on_epoch_end(self, epoch, logs={}):
-        self.losses += "Epoch {}: accuracy -> {:.4f}, val_accuracy -> {:.4f}\n"\
+        self.losses += "Epoch {}: accuracy -> {}, val_accuracy -> {}\n"\
             .format(str(self.epoch_id), logs.get('acc'), logs.get('val_acc'))
         self.epoch_id += 1
 
@@ -22,8 +22,8 @@ class LossHistory(Callback):
         self.losses += 'Training begins...\n'
 
 script_dir = os.path.dirname(__file__)
-training_set_path = os.path.join(script_dir, '../dataset/training_set')
-test_set_path = os.path.join(script_dir, '../dataset/test_set')
+training_set_path = os.path.join(script_dir, '../dataset/c19/training_set')
+test_set_path = os.path.join(script_dir, '../dataset/c19/test_set')
 
 # Initialising the CNN
 classifier = Sequential()
@@ -55,7 +55,7 @@ classifier.add(Dense(units=1, activation='sigmoid'))
 classifier.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
 
 # Part 2 - Fitting the CNN to the images
-batch_size = 32
+batch_size = 2
 train_datagen = ImageDataGenerator(rescale=1. / 255,
                                    shear_range=0.2,
                                    zoom_range=0.2,
@@ -73,36 +73,29 @@ test_set = test_datagen.flow_from_directory(test_set_path,
                                             batch_size=batch_size,
                                             class_mode='binary')
 
-# Create a loss history
+# # Create a loss history
 history = LossHistory()
 
-# classifier.fit_generator(training_set,
-#                          steps_per_epoch=8000/batch_size,
-#                          epochs=90,
-#                          validation_data=test_set,
-#                          validation_steps=2000/batch_size,
-#                          workers=12,
-#                          max_q_size=100,
-#                          callbacks=[history])
 classifier.fit_generator(training_set,
-                         steps_per_epoch=8000/batch_size,
+                         steps_per_epoch=20/batch_size,
                          epochs=1,
                          validation_data=test_set,
-                         validation_steps=2000/batch_size,
+                         validation_steps=5/batch_size,
                          workers=12,
-                         max_q_size=100)
+                         max_q_size=100,
+                         callbacks=[history])
 
 
 # Save model
-model_backup_path = os.path.join(script_dir, '../dataset/cat_or_dogs_model.h5')
+model_backup_path = os.path.join(script_dir, '../dataset/covid_or_normal_model.h5')
 classifier.save(model_backup_path)
 print("Model saved to", model_backup_path)
 
-# # Save loss history to file
-# loss_history_path = os.path.join(script_dir, '../loss_history.log')
-# myFile = open(loss_history_path, 'w+')
-# myFile.write(history.losses)
-# myFile.close()
+# Save loss history to file
+loss_history_path = os.path.join(script_dir, '../loss_history.log')
+myFile = open(loss_history_path, 'w+')
+myFile.write(history.losses)
+myFile.close()
 
 
 print("The model class indices are:", training_set.class_indices)

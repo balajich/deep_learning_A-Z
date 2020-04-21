@@ -5,20 +5,16 @@
 # from tensorflow.contrib.keras.api.keras.preprocessing import image
 # from tensorflow.contrib.keras import backend
 # from tensorflow.contrib.keras.api.keras.models import load_model
-from keras.callbacks import Callback
-from keras.engine.saving import load_model
-from keras.models import Sequential
-from keras.layers import Dense, Conv2D, MaxPooling2D, Flatten, Dropout
-import os
-import numpy as np
 import os
 
+import numpy as np
+from keras.engine.saving import load_model
 from keras.preprocessing import image
 
 script_dir = os.path.dirname(__file__)
 # Load pre-trained model
-model_backup_path = os.path.join(script_dir, '../dataset/cat_or_dogs_model.h5')
-test_set_path = os.path.join(script_dir, '../dataset/single_prediction')
+model_backup_path = os.path.join(script_dir, '../dataset/covid_or_normal_model.h5')
+test_set_path = os.path.join(script_dir, '../dataset/c19/single_prediction')
 
 classifier = load_model(model_backup_path)
 
@@ -34,9 +30,9 @@ predictions = classifier.predict(test_images)
 
 for prediction, image_path in zip(predictions, test_images_path):
     if prediction == 1:
-        prediction = 'dog'
+        prediction = 'covid'
     else:
-        prediction = 'cat'
+        prediction = 'normal'
     print("Predicted {} for file {}".format(prediction, image_path.split("/")[-1]))
 
-#backend.clear_session()
+# backend.clear_session()
