@@ -1,9 +1,10 @@
+# nohup python c19_cnn.py > c19_cnn.out 2>&1 &
 # Importing the Keras libraries and packages
-from keras.callbacks import Callback
-from keras.models import Sequential
-from keras.layers import Dense, Conv2D, MaxPooling2D, Flatten, Dropout
 import os
 
+from keras.callbacks import Callback
+from keras.layers import Dense, Conv2D, MaxPooling2D, Flatten, Dropout
+from keras.models import Sequential
 from keras_preprocessing.image import ImageDataGenerator
 
 
@@ -14,12 +15,13 @@ class LossHistory(Callback):
         self.losses = ''
 
     def on_epoch_end(self, epoch, logs={}):
-        self.losses += "Epoch {}: accuracy -> {}, val_accuracy -> {}\n"\
+        self.losses += "Epoch {}: accuracy -> {}, val_accuracy -> {}\n" \
             .format(str(self.epoch_id), logs.get('acc'), logs.get('val_acc'))
         self.epoch_id += 1
 
     def on_train_begin(self, logs={}):
         self.losses += 'Training begins...\n'
+
 
 script_dir = os.path.dirname(__file__)
 training_set_path = os.path.join(script_dir, '../dataset/c19/training_set')
@@ -77,14 +79,13 @@ test_set = test_datagen.flow_from_directory(test_set_path,
 history = LossHistory()
 
 classifier.fit_generator(training_set,
-                         steps_per_epoch=20/batch_size,
+                         steps_per_epoch=20 / batch_size,
                          epochs=90,
                          validation_data=test_set,
-                         validation_steps=5/batch_size,
+                         validation_steps=5 / batch_size,
                          workers=12,
                          max_q_size=100,
                          callbacks=[history])
-
 
 # Save model
 model_backup_path = os.path.join(script_dir, '../dataset/covid_or_normal_model.h5')
@@ -96,6 +97,5 @@ loss_history_path = os.path.join(script_dir, '../c19_loss_history.log')
 myFile = open(loss_history_path, 'w+')
 myFile.write(history.losses)
 myFile.close()
-
 
 print("The model class indices are:", training_set.class_indices)
