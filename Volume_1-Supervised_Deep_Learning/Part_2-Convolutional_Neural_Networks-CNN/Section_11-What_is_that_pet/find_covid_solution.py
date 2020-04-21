@@ -30,9 +30,9 @@ predictions = classifier.predict(test_images)
 
 for prediction, image_path in zip(predictions, test_images_path):
     if prediction == 1:
-        prediction = 'covid'
-    else:
         prediction = 'normal'
+    else:
+        prediction = 'covid'
     print("Predicted {} for file {}".format(prediction, image_path.split("/")[-1]))
 
 # backend.clear_session()
