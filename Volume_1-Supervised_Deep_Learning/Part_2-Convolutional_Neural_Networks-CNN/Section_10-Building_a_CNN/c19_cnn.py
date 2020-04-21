@@ -92,7 +92,7 @@ classifier.save(model_backup_path)
 print("Model saved to", model_backup_path)
 
 # Save loss history to file
-loss_history_path = os.path.join(script_dir, '../loss_history.log')
+loss_history_path = os.path.join(script_dir, '../c19_loss_history.log')
 myFile = open(loss_history_path, 'w+')
 myFile.write(history.losses)
 myFile.close()
