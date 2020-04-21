@@ -78,7 +78,7 @@ history = LossHistory()
 
 classifier.fit_generator(training_set,
                          steps_per_epoch=20/batch_size,
-                         epochs=1,
+                         epochs=90,
                          validation_data=test_set,
                          validation_steps=5/batch_size,
                          workers=12,
