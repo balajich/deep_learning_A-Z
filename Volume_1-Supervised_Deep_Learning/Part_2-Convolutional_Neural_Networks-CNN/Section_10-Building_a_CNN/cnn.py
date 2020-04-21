@@ -1,4 +1,4 @@
-# nohup python cnn.py > cnn.out &
+# nohup python cnn.py > cnn.out 2>&1 &
 # Importing the Keras libraries and packages
 from keras.callbacks import Callback
 from keras.models import Sequential
@@ -79,7 +79,7 @@ history = LossHistory()
 
 classifier.fit_generator(training_set,
                          steps_per_epoch=8000/batch_size,
-                         epochs=1,
+                         epochs=90,
                          validation_data=test_set,
                          validation_steps=2000/batch_size,
                          workers=12,
