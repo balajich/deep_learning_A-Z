@@ -1,3 +1,4 @@
+# nohup python cnn.py > cnn.out &
 # Importing the Keras libraries and packages
 from keras.callbacks import Callback
 from keras.models import Sequential
